@@ -26,7 +26,7 @@ import tasks from "../data/tasks.json";
         const raw = localStorage.getItem("tasks");
 
         // Als er data is, parse JSON naar een JavaScript-array
-        // Anders gebruik een standaardvoorbeeldtaak
+        // Anders gebruik de taken uit de JSON of een standaard voorbeeldtaak
         const localTasks = raw
           ? JSON.parse(raw)
           : [
@@ -54,19 +54,30 @@ import tasks from "../data/tasks.json";
           <p>${task.beschrijving}</p>
         `.trim();
 
-          function deleteTask(index) {
+          const completeButton = document.createElement("button");
+          completeButton.type = "button";
+          completeButton.textContent = task.afgerond ? "Niet afgerond" : "Voltooid";
+          completeButton.addEventListener("click", () => {
             const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-            tasks.splice(index, 1);
+            tasks[index].afgerond = !tasks[index].afgerond;
             localStorage.setItem("tasks", JSON.stringify(tasks));
             showLocalStorageTasks();
-          }
+          });
 
-          const button = document.createElement("button");
-          button.type = "button";
-          button.textContent = "Verwijder";
-          button.addEventListener("click", () => deleteTask(index));
+          const deleteTask = (taskIndex) => {
+            const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.splice(taskIndex, 1);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            showLocalStorageTasks();
+          };
 
-          item.appendChild(button);
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.textContent = "Verwijder";
+          deleteButton.addEventListener("click", () => deleteTask(index));
+
+          item.appendChild(completeButton);
+          item.appendChild(deleteButton);
           list.appendChild(item);
         });
 
