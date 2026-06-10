@@ -1,0 +1,50 @@
+<div>
+  <h2>Voeg een taak toe</h2>
+  <form id="create-task-form">
+    <div>
+      <label for="titel">Titel:</label>
+      <input id="titel" type="text" name="titel" required />
+    </div>
+
+    <div>
+      <label for="categorie">Categorie:</label>
+      <input id="categorie" type="text" name="categorie" required />
+    </div>
+
+    <div>
+      <label for="beschrijving">Beschrijving:</label>
+      <input id="beschrijving" type="text" name="beschrijving" required />
+    </div>
+
+    <button type="submit">Toevoegen</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document
+      .getElementById("create-task-form")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const titel = document.getElementById("titel").value;
+        const categorie = document.getElementById("categorie").value;
+        const beschrijving = document.getElementById("beschrijving").value;
+
+        // Haal bestaande taken op
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+        // Voeg nieuwe taak toe
+        tasks.push({ titel, categorie, beschrijving });
+
+        // Sla alles op
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        window.dispatchEvent(new Event("tasks-updated"));
+
+        // Reset formulier
+        this.reset();
+        
+        alert("Taak toegevoegd!");
+      });
+  });
+</script>
