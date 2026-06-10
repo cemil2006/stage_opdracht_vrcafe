@@ -1,19 +1,23 @@
 ---
 ---
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Astro Basics</title>
+    </head>
+    <body>
+        <slot />
+    </body>
 
 <section>
-	<h1>Todo Component</h1>
-	<p>Dit is je Todo-component. Zet hier je takenlijst of andere inhoud neer.</p>
+	<h1>Todo</h1>
 </section>
 
-<style>
-	section {
-		padding: 2rem;
-		max-width: 600px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		margin-bottom: 1rem;
-	}
-</style>
+<section>
+    <ul>
+    </ul>
+</section>
