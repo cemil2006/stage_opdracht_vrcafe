@@ -17,6 +17,7 @@ import tasks from "../data/tasks.json";
 
   <section>
     <h1>Todo</h1>
+    <a href="/create">Maak nieuwe taak</a>
     <ul id="local-tasks-list"></ul>
 
     <script>
@@ -32,6 +33,7 @@ import tasks from "../data/tasks.json";
               {
                 titel: "titel",
                 categorie: "categorie",
+                afgerond: false,
                 beschrijving: "beschrijving",
               },
             ];
@@ -43,13 +45,28 @@ import tasks from "../data/tasks.json";
         list.innerHTML = "";
 
         // Loop door alle taken en voeg ze toe aan de lijst
-        localTasks.forEach((task) => {
+        localTasks.forEach((task, index) => {
           const item = document.createElement("li");
           item.innerHTML = `
           <h2>${task.titel}</h2>
           <p>${task.categorie}</p>
+          <p>${task.afgerond ? "Afgerond" : "Niet afgerond"}</p>
           <p>${task.beschrijving}</p>
         `.trim();
+
+          function deleteTask(index) {
+            const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.splice(index, 1);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            showLocalStorageTasks();
+          }
+
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = "Verwijder";
+          button.addEventListener("click", () => deleteTask(index));
+
+          item.appendChild(button);
           list.appendChild(item);
         });
 
@@ -61,4 +78,6 @@ import tasks from "../data/tasks.json";
       document.addEventListener("DOMContentLoaded", showLocalStorageTasks);
     </script>
   </section>
+
+  <section></section>
 </html>

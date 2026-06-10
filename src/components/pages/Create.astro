@@ -34,13 +34,14 @@
 
         const titel = document.getElementById("titel").value;
         const categorie = document.getElementById("categorie").value;
+        const afgerond = false; // Nieuwe taken zijn standaard niet afgerond
         const beschrijving = document.getElementById("beschrijving").value;
 
         // Haal bestaande taken op
         let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
         // Voeg nieuwe taak toe
-        tasks.push({ titel, categorie, beschrijving });
+        tasks.push({ titel, categorie, afgerond, beschrijving });
 
         // Sla alles op
         localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -50,6 +51,9 @@
         this.reset();
 
         alert("Taak toegevoegd!");
+
+        // Ga terug naar de homepage na toevoegen
+        window.location.href = "/";
       });
   });
 </script>
