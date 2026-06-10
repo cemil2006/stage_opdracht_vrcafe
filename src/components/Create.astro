@@ -8,7 +8,12 @@
 
     <div>
       <label for="categorie">Categorie:</label>
-      <input id="categorie" type="text" name="categorie" required />
+      <select id="categorie" name="categorie" required>
+        <option value="" disabled selected>Kies een categorie</option>
+        <option value="persoonlijk">Persoonlijk</option>
+        <option value="werk">Werk</option>
+        <option value="vrije tijd">Vrije tijd</option>
+      </select>
     </div>
 
     <div>
@@ -43,7 +48,7 @@
 
         // Reset formulier
         this.reset();
-        
+
         alert("Taak toegevoegd!");
       });
   });

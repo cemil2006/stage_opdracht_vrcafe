@@ -17,36 +17,48 @@ import tasks from "../data/tasks.json";
 
   <section>
     <h1>Todo</h1>
-  </section>
+    <ul id="local-tasks-list"></ul>
 
-  <section>
-    <ul>
-      {
-        tasks.map((task) => (
-          <li>
-            <h2>{task.titel}</h2>
-            <p>{task.categorie}</p>
-            <p>{task.beschrijving}</p>
-          </li>
-        ))
+    <script>
+      function showLocalStorageTasks() {
+        // Haal de string met taken op uit localStorage
+        const raw = localStorage.getItem("tasks");
+
+        // Als er data is, parse JSON naar een JavaScript-array
+        // Anders gebruik een standaardvoorbeeldtaak
+        const localTasks = raw
+          ? JSON.parse(raw)
+          : [
+              {
+                titel: "titel",
+                categorie: "categorie",
+                beschrijving: "beschrijving",
+              },
+            ];
+
+        // Zoek het <ul>-element waar we de taken willen tonen
+        const list = document.getElementById("local-tasks-list");
+
+        // Maak de lijst eerst leeg zodat we niet dubbel tonen
+        list.innerHTML = "";
+
+        // Loop door alle taken en voeg ze toe aan de lijst
+        localTasks.forEach((task) => {
+          const item = document.createElement("li");
+          item.innerHTML = `
+          <h2>${task.titel}</h2>
+          <p>${task.categorie}</p>
+          <p>${task.beschrijving}</p>
+        `.trim();
+          list.appendChild(item);
+        });
+
+        // Laat de taken ook in de browserconsole zien voor debugging
+        console.log("Local storage taken:", localTasks);
       }
-    </ul>
-    <ul>
-      <li>
-        <script>
-          //haal local storage data op
-          let tasks = JSON.parse(localStorage.getItem("tasks")) || [
-            {
-              titel: "titel",
-              categorie: "categorie",
-              beschrijving:
-                "beschrijving",
-            },
-          ];
-          //toon taken in console
-          console.log(tasks);
-        </script>
-      </li>
-    </ul>
+
+      // Roep de functie aan zodra de pagina is geladen
+      document.addEventListener("DOMContentLoaded", showLocalStorageTasks);
+    </script>
   </section>
 </html>
