@@ -1,5 +1,99 @@
-<nav class="site-nav">
-  <a href="/">Todo List</a>
-  <a href="/create">Create</a>
-</nav>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/VRcafe.png" />
+    <link rel="icon" href="/VRcafe.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro Basics</title>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-logo">
+          <img src="/VRcafe.png" alt="VR CAFE Logo" class="logo-img" />
+        </div>
+        <div class="navbar-links">
+          <a href="/">Todo List</a>
+          <a href="/create">Create</a>
+        </div>
+      </div>
+    </nav>
+    <slot />
+  </body>
+</html>
 
+<style is:global>
+  .navbar {
+    size: 100% 80px;
+    background-color: #1a1a1a;
+    padding: clamp(12px, 2vw, 18px) 0;
+    position: bottom;
+    top: 0;
+    z-index: 100;
+  }
+
+  .navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 28px);
+    gap: clamp(20px, 5vw, 40px);
+  }
+
+  .navbar-logo {
+    flex-shrink: 0;
+  }
+
+  .logo-img {
+    height: clamp(40px, 8vw, 60px);
+    width: auto;
+  }
+
+  .navbar-links {
+    display: flex;
+    gap: clamp(16px, 3vw, 28px);
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex: 1;
+  }
+
+  .navbar-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: clamp(14px, 1.5vw, 18px);
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+  }
+
+  .navbar-links a:hover {
+    color: #32ffb8;
+    border-color: #32ffb8;
+    background-color: rgba(50, 255, 184, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .navbar-container {
+      flex-direction: column;
+      gap: clamp(12px, 2vw, 16px);
+    }
+
+    .navbar-links {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .navbar-logo {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  }
+</style>
