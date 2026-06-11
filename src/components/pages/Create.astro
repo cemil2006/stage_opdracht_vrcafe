@@ -1,29 +1,39 @@
-<div>
-  <h2>Voeg een taak toe</h2>
+<section>
+  <h2 class="create-title">Voeg een taak toe</h2>
   <form id="create-task-form">
-    <div>
-      <label for="titel">Titel:</label>
-      <input id="titel" type="text" name="titel" required />
-    </div>
+    <div class="create-folder">
+      <div class="textarea">
+        <input
+          id="titel"
+          type="text"
+          name="titel"
+          placeholder="Voer de titel in"
+          required
+        />
+      </div>
 
-    <div>
-      <label for="categorie">Categorie:</label>
-      <select id="categorie" name="categorie" required>
-        <option value="" disabled selected>Kies een categorie</option>
-        <option value="persoonlijk">Persoonlijk</option>
-        <option value="werk">Werk</option>
-        <option value="vrije tijd">Vrije tijd</option>
-      </select>
-    </div>
+      <div class="create-dropdown">
+        <select id="categorie" name="categorie" required>
+          <option value="" disabled selected>Kies een categorie</option>
+          <option value="persoonlijk">Persoonlijk</option>
+          <option value="werk">Werk</option>
+          <option value="vrije tijd">Vrije tijd</option>
+        </select>
+      </div>
 
-    <div>
-      <label for="beschrijving">Beschrijving:</label>
-      <input id="beschrijving" type="text" name="beschrijving" required />
+      <div class="textarea">
+        <input
+          id="beschrijving"
+          type="text"
+          name="beschrijving"
+          placeholder="Voer de beschrijving in"
+          required
+        />
+      </div>
     </div>
-
     <button type="submit">Toevoegen</button>
   </form>
-</div>
+</section>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
