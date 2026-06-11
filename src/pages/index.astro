@@ -1,14 +1,15 @@
 ---
 import Todo from "../components/pages/Todo.astro";
-import Layout from "../layouts/Layout.astro";
-
+import Todostyle from "../layouts/Todostyle.astro";
+import Navbar from "../components/pages/Navbar.astro";
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 ---
 
-<Layout>
+<Navbar />
+<Todostyle>
   <main>
     <section>
       <Todo />
     </section>
   </main>
-</Layout>
+</Todostyle>

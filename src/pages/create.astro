@@ -1,17 +1,16 @@
 ---
 import Create from "../components/pages/Create.astro";
-import Navbar from "../components/pages/navbar.astro";
 import Crud from "../layouts/Crud.astro";
+import Navbar from "../components/pages/Navbar.astro";
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 ---
 
-<Crud>
-  <main>
-
-    <Navbar />
-    <section>
-      <Create />
-    </section>
-  </main>
-</Crud>
+<Navbar />
+  <Crud>
+    <main>
+      <section>
+        <Create />
+      </section>
+    </main>
+  </Crud>
