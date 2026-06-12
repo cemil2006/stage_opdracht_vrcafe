@@ -36,56 +36,33 @@
 </section>
 
 <script>
-  // Deze functie regelt het hele formulier
-  function setupForm() {
+  document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("create-task-form");
-    
-    // Beveiliging 1: Stop als het formulier niet op deze pagina staat
-    if (!form) return; 
+    if (!form) return;
 
-    // Beveiliging 2: Voorkom dat de listener er twee keer op wordt gezet
-    if (form.getAttribute('data-has-listener') === 'true') return;
-    form.setAttribute('data-has-listener', 'true');
+    if (form.dataset.hasListener === "true") return;
+    form.dataset.hasListener = "true";
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault(); // Stopt de traditionele 404-refresh
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
 
-      // Waarden ophalen uit de inputs
-      const titel = (document.getElementById("titel") as HTMLInputElement || document.getElementById("titel")).value;
-      const categorie = (document.getElementById("categorie") as HTMLSelectElement || document.getElementById("categorie")).value;
+      const titel = document.querySelector("#titel")?.value || "";
+      const categorie = document.querySelector("#categorie")?.value || "";
+      const beschrijving = document.querySelector("#beschrijving")?.value || "";
       const afgerond = false;
-      const beschrijving = (document.getElementById("beschrijving") as HTMLInputElement || document.getElementById("beschrijving")).value;
 
-      // Haal bestaande taken op uit LocalStorage
       let tasks = [];
       try {
         tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-      } catch (err) {
+      } catch {
         tasks = [];
       }
 
-      // Voeg nieuwe taak toe
       tasks.push({ titel, categorie, afgerond, beschrijving });
-
-      // Sla alles op
       localStorage.setItem("tasks", JSON.stringify(tasks));
-      
-      // Geef een seintje aan de homepage dat er een nieuwe taak is
-      window.dispatchEvent(new Event("tasks-updated"));
 
-      // Reset het formulier
-      this.reset();
-
+      form.reset();
       alert("Taak succesvol toegevoegd!");
-
-      // Stuur de gebruiker terug naar de live homepage
-      window.location.href = "/stage_opdracht_vrcafe/";
     });
-  }
-
-  // Zorg dat de functie direct start als de pagina laadt
-  setupForm();
-
-  // Zorg dat de functie OOK start als Astro van pagina wisselt (voor de zekerheid)
-  document.addEventListener("astro:page-load", setupForm);
+  });
 </script>
