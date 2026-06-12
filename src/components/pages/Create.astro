@@ -52,11 +52,11 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault(); // Stopt het traditionele verzenden (voorkomt 404)
 
-      // Waarden ophalen uit de inputs
-      const titel = (document.getElementById("titel") as HTMLInputElement).value;
-      const categorie = (document.getElementById("categorie") as HTMLSelectElement).value;
+      // Waarden ophalen uit de inputs (nu in pure JavaScript)
+      const titel = document.getElementById("titel").value;
+      const categorie = document.getElementById("categorie").value;
       const afgerond = false;
-      const beschrijving = (document.getElementById("beschrijving") as HTMLInputElement).value;
+      const beschrijving = document.getElementById("beschrijving").value;
 
       // Haal bestaande taken op
       let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
