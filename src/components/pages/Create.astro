@@ -36,47 +36,56 @@
 </section>
 
 <script>
-  // Luister naar de Astro lifecycle. Dit dekt de eerste keer laden EN pagina-wissels.
-  document.addEventListener("astro:page-load", setupForm);
-
+  // Deze functie regelt het hele formulier
   function setupForm() {
     const form = document.getElementById("create-task-form");
     
     // Beveiliging 1: Stop als het formulier niet op deze pagina staat
     if (!form) return; 
 
-    // Beveiliging 2: Stop als er al een luisteraar op dit formulier zit
-    if (form.dataset.hasListener === "true") return;
-    form.dataset.hasListener = "true";
+    // Beveiliging 2: Voorkom dat de listener er twee keer op wordt gezet
+    if (form.getAttribute('data-has-listener') === 'true') return;
+    form.setAttribute('data-has-listener', 'true');
 
     form.addEventListener("submit", function (e) {
-      e.preventDefault(); // Stopt het traditionele verzenden (voorkomt 404)
+      e.preventDefault(); // Stopt de traditionele 404-refresh
 
-      // Waarden ophalen uit de inputs (nu in pure JavaScript)
-      const titel = document.getElementById("titel").value;
-      const categorie = document.getElementById("categorie").value;
+      // Waarden ophalen uit de inputs
+      const titel = (document.getElementById("titel") as HTMLInputElement || document.getElementById("titel")).value;
+      const categorie = (document.getElementById("categorie") as HTMLSelectElement || document.getElementById("categorie")).value;
       const afgerond = false;
-      const beschrijving = document.getElementById("beschrijving").value;
+      const beschrijving = (document.getElementById("beschrijving") as HTMLInputElement || document.getElementById("beschrijving")).value;
 
-      // Haal bestaande taken op
-      let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+      // Haal bestaande taken op uit LocalStorage
+      let tasks = [];
+      try {
+        tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+      } catch (err) {
+        tasks = [];
+      }
 
       // Voeg nieuwe taak toe
       tasks.push({ titel, categorie, afgerond, beschrijving });
 
-      // Sla alles op in LocalStorage
+      // Sla alles op
       localStorage.setItem("tasks", JSON.stringify(tasks));
       
-      // Geef een seintje dat de taken zijn bijgewerkt
+      // Geef een seintje aan de homepage dat er een nieuwe taak is
       window.dispatchEvent(new Event("tasks-updated"));
 
-      // Reset het formulier direct
+      // Reset het formulier
       this.reset();
 
-      alert("Taak toegevoegd!");
+      alert("Taak succesvol toegevoegd!");
 
-      // Stuur de gebruiker netjes terug naar de homepage
+      // Stuur de gebruiker terug naar de live homepage
       window.location.href = "/stage_opdracht_vrcafe/";
     });
   }
+
+  // Zorg dat de functie direct start als de pagina laadt
+  setupForm();
+
+  // Zorg dat de functie OOK start als Astro van pagina wisselt (voor de zekerheid)
+  document.addEventListener("astro:page-load", setupForm);
 </script>
