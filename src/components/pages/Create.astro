@@ -36,23 +36,24 @@
 </section>
 
 <script>
-  // Astro gebruikt een eigen event-lifecycle. 
+  // Astro gebruikt een eigen event-lifecycle.
   // Dit zorgt ervoor dat het script ALTIJD werkt, ook na het switchen van pagina's.
-  document.addEventListener("astro:page-load", setupForm) || setupForm();
+  document.addEventListener("astro:page-load", setupForm);
+  setupForm();
 
   function setupForm() {
     const form = document.getElementById("create-task-form");
     if (!form) return; // Beveiliging: stop als het formulier niet op deze pagina staat
 
-    // Verwijder oude listeners om dubbele triggers te voorkomen
-    form.removeAttribute('data-has-listener'); 
-    
+    if (form.dataset.hasListener === "true") return;
+    form.dataset.hasListener = "true";
+
     form.addEventListener("submit", function (e) {
       e.preventDefault(); // Dit stopt het traditionele verzenden (voorkomt de 404!)
 
       const titel = document.getElementById("titel").value;
       const categorie = document.getElementById("categorie").value;
-      const afgerond = false; 
+      const afgerond = false;
       const beschrijving = document.getElementById("beschrijving").value;
 
       // Haal bestaande taken op
