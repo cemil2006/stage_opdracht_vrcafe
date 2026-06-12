@@ -1,94 +1,116 @@
----
-import tasks from "../data/tasks.json";
----
+<section>
+  <h1>Todo</h1>
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/VRcafe.png" />
-    <link rel="icon" href="/VRcafe.png" />
-    <meta name="generator" content={Astro.generator} />
-    <title>todo</title>
-  </head>
-  <body>
-    <slot />
-  </body>
+  <select id="category-filter">
+    <option value="">Alle categorieën</option>
+  </select>
 
-  <section>
-    <h1>Todo</h1>
-    <a href="/create">Maak nieuwe taak</a>
-    <ul id="local-tasks-list"></ul>
+  <ul id="local-tasks-list"></ul>
 
-    <script>
-      function showLocalStorageTasks() {
-        // Haal de string met taken op uit localStorage
-        const raw = localStorage.getItem("tasks");
+  <script>
 
-        // Als er data is, parse JSON naar een JavaScript-array
-        // Anders gebruik de taken uit de JSON of een standaard voorbeeldtaak
-        const localTasks = raw
-          ? JSON.parse(raw)
-          : [
-              {
-                titel: "titel",
-                categorie: "categorie",
-                afgerond: false,
-                beschrijving: "beschrijving",
-              },
-            ];
+    function showtasks() {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      console.log(tasks);
+    }
+    function renderFilter() {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-        // Zoek het <ul>-element waar we de taken willen tonen
-        const list = document.getElementById("local-tasks-list");
+      const categories = [...new Set(tasks.map(task => task.categorie))];
 
-        // Maak de lijst eerst leeg zodat we niet dubbel tonen
-        list.innerHTML = "";
+      const select = document.getElementById("category-filter");
 
-        // Loop door alle taken en voeg ze toe aan de lijst
-        localTasks.forEach((task, index) => {
-          const item = document.createElement("li");
-          item.innerHTML = `
+      select.innerHTML = `
+        <option value="">Alle categorieën</option>
+      `;
+
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        select.appendChild(option);
+      });
+    }
+
+    function showLocalStorageTasks() {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+      const selectedCategory =
+        document.getElementById("category-filter").value;
+
+      const filteredTasks = selectedCategory
+        ? tasks.filter(task => task.categorie === selectedCategory)
+        : tasks;
+
+      const list = document.getElementById("local-tasks-list");
+      list.innerHTML = "";
+
+      filteredTasks.forEach((task) => {
+        const originalIndex = tasks.indexOf(task);
+
+        const item = document.createElement("li");
+
+        item.innerHTML = `
           <h2>${task.titel}</h2>
-          <p>${task.categorie}</p>
-          <p>${task.afgerond ? "Afgerond" : "Niet afgerond"}</p>
+          <p>Categorie: ${task.categorie}</p>
+          <p>Status: ${task.afgerond ? "Afgerond" : "Niet afgerond"}</p>
           <p>${task.beschrijving}</p>
-        `.trim();
+        `;
 
-          const completeButton = document.createElement("button");
-          completeButton.type = "button";
-          completeButton.textContent = task.afgerond ? "Niet afgerond" : "Voltooid";
-          completeButton.addEventListener("click", () => {
-            const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-            tasks[index].afgerond = !tasks[index].afgerond;
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-            showLocalStorageTasks();
-          });
+        // Voltooien knop
+        const completeButton = document.createElement("button");
+        completeButton.textContent = task.afgerond
+          ? "Niet afgerond"
+          : "Voltooid";
 
-          const deleteTask = (taskIndex) => {
-            const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-            tasks.splice(taskIndex, 1);
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-            showLocalStorageTasks();
-          };
+        completeButton.addEventListener("click", () => {
+          const allTasks =
+            JSON.parse(localStorage.getItem("tasks")) || [];
 
-          const deleteButton = document.createElement("button");
-          deleteButton.type = "button";
-          deleteButton.textContent = "Verwijder";
-          deleteButton.addEventListener("click", () => deleteTask(index));
+          allTasks[originalIndex].afgerond =
+            !allTasks[originalIndex].afgerond;
 
-          item.appendChild(completeButton);
-          item.appendChild(deleteButton);
-          list.appendChild(item);
+          localStorage.setItem(
+            "tasks",
+            JSON.stringify(allTasks)
+          );
+
+          showLocalStorageTasks();
         });
 
-        // Laat de taken ook in de browserconsole zien voor debugging
-        console.log("Local storage taken:", localTasks);
-      }
+        // Verwijderen knop
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Verwijder";
 
-      // Roep de functie aan zodra de pagina is geladen
-      document.addEventListener("DOMContentLoaded", showLocalStorageTasks);
-    </script>
-  </section>
+        deleteButton.addEventListener("click", () => {
+          const allTasks =
+            JSON.parse(localStorage.getItem("tasks")) || [];
 
-  <section></section>
-</html>
+          allTasks.splice(originalIndex, 1);
+
+          localStorage.setItem(
+            "tasks",
+            JSON.stringify(allTasks)
+          );
+
+          renderFilter();
+          showLocalStorageTasks();
+        });
+
+        item.appendChild(completeButton);
+        item.appendChild(deleteButton);
+
+        list.appendChild(item);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderFilter();
+      showLocalStorageTasks();
+
+      document
+        .getElementById("category-filter")
+        .addEventListener("change", showLocalStorageTasks);
+    });
+  </script>
+</section>
