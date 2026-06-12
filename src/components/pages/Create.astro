@@ -36,34 +36,45 @@
 </section>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    document
-      .getElementById("create-task-form")
-      .addEventListener("submit", function (e) {
-        e.preventDefault();
+  // Astro gebruikt een eigen event-lifecycle. 
+  // Dit zorgt ervoor dat het script ALTIJD werkt, ook na het switchen van pagina's.
+  document.addEventListener("astro:page-load", setupForm) || setupForm();
 
-        const titel = document.getElementById("titel").value;
-        const categorie = document.getElementById("categorie").value;
-        const afgerond = false; // Nieuwe taken zijn standaard niet afgerond
-        const beschrijving = document.getElementById("beschrijving").value;
+  function setupForm() {
+    const form = document.getElementById("create-task-form");
+    if (!form) return; // Beveiliging: stop als het formulier niet op deze pagina staat
 
-        // Haal bestaande taken op
-        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    // Verwijder oude listeners om dubbele triggers te voorkomen
+    form.removeAttribute('data-has-listener'); 
+    
+    form.addEventListener("submit", function (e) {
+      e.preventDefault(); // Dit stopt het traditionele verzenden (voorkomt de 404!)
 
-        // Voeg nieuwe taak toe
-        tasks.push({ titel, categorie, afgerond, beschrijving });
+      const titel = document.getElementById("titel").value;
+      const categorie = document.getElementById("categorie").value;
+      const afgerond = false; 
+      const beschrijving = document.getElementById("beschrijving").value;
 
-        // Sla alles op
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        window.dispatchEvent(new Event("tasks-updated"));
+      // Haal bestaande taken op
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-        // Reset formulier
-        this.reset();
+      // Voeg nieuwe taak toe
+      tasks.push({ titel, categorie, afgerond, beschrijving });
 
-        alert("Taak toegevoegd!");
+      // Sla alles op in LocalStorage
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      window.dispatchEvent(new Event("tasks-updated"));
 
-        // Ga terug naar de homepage na toevoegen
-        window.location.href = "/stage_opdracht_vrcafe/";
-      });
-  });
+      // Reset formulier
+      this.reset();
+
+      alert("Taak toegevoegd!");
+
+      // Stuur de gebruiker veilig terug naar de GitHub Pages homepage
+      window.location.href = "/stage_opdracht_vrcafe/";
+    });
+  }
+
+  // Voer direct uit bij de eerste keer laden
+  setupForm();
 </script>
